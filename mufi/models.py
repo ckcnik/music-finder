@@ -3,7 +3,7 @@ import time
 from django.db import models
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
-from os import system
+from os import system, remove
 from os.path import abspath, dirname, isfile
 from pytube import YouTube  # парсер ютуб-роликов
 
@@ -107,3 +107,17 @@ class Video(models.Model):
         state = get_object_or_404(State, name=name, trash=False)
         self.state = state
         self.save()
+
+    def remove_video_file(self):
+        """
+        Удаление временного видео-файла
+        :return: None
+        """
+        remove(self.PATH_TO_VIDEO + str(self.id) + '.3gp')
+
+    def remove_audio_file(self):
+        """
+        Удаление временного видео-файла
+        :return: None
+        """
+        remove(self.PATH_TO_AUDIO + str(self.id) + '.mp3')

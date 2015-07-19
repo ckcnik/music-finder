@@ -36,6 +36,7 @@ def extract_audio(video_obj, url_obj):
     result = video_obj.extract_audio(url_obj.time)
     if result:
         video_obj.set_state(State.SOUND_PROCESS_SUCCESS)
+        video_obj.remove_video_file()
     else:
         video_obj.set_state(State.SOUND_PROCESS_ERROR)
     return result
