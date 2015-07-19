@@ -29,11 +29,11 @@ def index(request):
             video_obj.set_state('video_loading_success')
 
             # если успешно извлечен аудио-поток
-            if video_obj.extract_audio(time):
+            if video_obj.extract_audio(url_obj.time):
                 video_obj.set_state('sound_process_success')
             else:
                 video_obj.set_state('sound_process_error')
         else:
             video_obj.set_state('video_loading_error')
 
-    return HttpResponse(time)
+    return HttpResponse(url_obj.time)
