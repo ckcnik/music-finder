@@ -1,6 +1,10 @@
+import time
+
 from django.db import models
 from django.utils import timezone
-from os.path import abspath  # для получения абсолютного пути
+from django.shortcuts import get_object_or_404
+from os import system
+from os.path import abspath, dirname, isfile
 from pytube import YouTube  # парсер ютуб-роликов
 
 
@@ -34,8 +38,11 @@ class Video(models.Model):
     state = models.ForeignKey(State)
     date_created = models.DateTimeField(default=timezone.now)
     trash = models.BooleanField(default=False)
+
     # тут храним видосы
-    PATH_TO_VIDEO = abspath(__file__) + '/../tmp/video/'
+    PATH_TO_VIDEO = dirname(abspath(__file__)) + '/tmp/video/'
+    # временные аудио-файлы
+    PATH_TO_AUDIO = dirname(abspath(__file__)) + '/tmp/audio/'
 
     def download(self, url):
         """
@@ -51,3 +58,39 @@ class Video(models.Model):
         video.filename = self.id
         video.download(self.PATH_TO_VIDEO)
         return True
+
+    def extract_audio(self, seconds=0, duration=30):
+        """
+        Извлечение указанного промежутка аудио-потока из видео-файла и
+        загрузка его во временный аудио-файл
+        :param seconds: позиция старта (в секундах), по умолчанию с начала
+        :param duration: длительность (в секундах), по умолчанию 30 с.
+        :return: возвращает True если файл создан, иначе - False
+        возвращает исключение если не существует видео-файла источника
+        """
+        self.set_state('sound_process')
+
+        video_file_path = self.PATH_TO_VIDEO + str(self.id) + '.3gp'
+        audio_file_path = self.PATH_TO_AUDIO + str(self.id) + '.mp3'
+
+        if not isfile(video_file_path):
+            self.set_state('sound_process_error')
+            raise NameError('Видое-файл не существует!')
+
+        start = time.strftime("%H:%M:%S", time.gmtime(seconds))
+        duration = time.strftime("%H:%M:%S", time.gmtime(duration))
+
+        ffmpeg_cmd = 'ffmpeg -i {0} -ss {1} -t {2} -acodec libmp3lame -aq 4 {3}'.format(video_file_path, start, duration, audio_file_path)
+        system(ffmpeg_cmd)
+
+        return isfile(audio_file_path)
+
+    def set_state(self, name):
+        """
+        Запись статуса в БД
+        :param name:
+        :return: None
+        """
+        state = get_object_or_404(State, name=name, trash=False)
+        self.state = state
+        self.save()

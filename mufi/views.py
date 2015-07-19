@@ -37,7 +37,14 @@ def index(request):
 
         # если видео успешно скачано
         if video_obj.download(url):
-            state = get_object_or_404(State, name='video_loading_success', trash=False)
-            video_obj.state = state
-            video_obj.save()
+            video_obj.set_state('video_loading_success')
+
+            # если успешно извлечен аудио-поток
+            if video_obj.extract_audio(time):
+                video_obj.set_state('sound_process_success')
+            else:
+                video_obj.set_state('sound_process_error')
+        else:
+            video_obj.set_state('video_loading_error')
+
     return HttpResponse(time)
