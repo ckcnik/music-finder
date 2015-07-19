@@ -87,8 +87,8 @@ class Video(models.Model):
         """
         self.set_state('sound_process')
 
-        video_file_path = self.PATH_TO_VIDEO + str(self.id) + self.VIDEO_FILE_FORMAT
-        audio_file_path = self.PATH_TO_AUDIO + str(self.id) + self.AUDIO_FILE_FORMAT
+        video_file_path = self.get_path_to_video()
+        audio_file_path = self.get_path_to_audio()
 
         if not isfile(video_file_path):
             self.set_state('sound_process_error')
@@ -113,10 +113,18 @@ class Video(models.Model):
         self.save()
 
     def get_path_to_audio(self):
+        """
+        Возвращает путь к аудио-файлу
+        :return:
+        """
         path = self.PATH_TO_AUDIO + str(self.id) + self.AUDIO_FILE_FORMAT
         return path
 
     def get_path_to_video(self):
+        """
+        Возвращает путь к видео-файлу
+        :return:
+        """
         path = self.PATH_TO_VIDEO + str(self.id) + self.VIDEO_FILE_FORMAT
         return path
     
@@ -125,11 +133,11 @@ class Video(models.Model):
         Удаление временного видео-файла
         :return: None
         """
-        remove(self.PATH_TO_VIDEO + str(self.id) + '.3gp')
+        remove(self.get_path_to_video())
 
     def remove_audio_file(self):
         """
         Удаление временного видео-файла
         :return: None
         """
-        remove(self.PATH_TO_AUDIO + str(self.id) + '.mp3')
+        remove(self.get_path_to_audio())

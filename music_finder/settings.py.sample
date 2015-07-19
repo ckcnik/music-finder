@@ -126,6 +126,6 @@ CELERY_TIMEZONE = 'Europe/Moscow'
 MY_SETTING = {
     'ACRCLOUD': {
         'ACCESS_KEY': '78004df94475843124e78634d2d7de60',
-        'ACCESS_SECRET': '0uECti2xjleseBUxpBkBMeYnevWNTc6ErJUUMts',
+        'ACCESS_SECRET': '0uECti2xjleseBUxpBkBMeYnevWNTc6ErJUUMts1',
     }
 }
