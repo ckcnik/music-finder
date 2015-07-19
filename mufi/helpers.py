@@ -12,6 +12,7 @@ import time
 import hmac
 import hashlib
 
+
 class ParseUrl(object):
     def __init__(self, url, time=0):
         """
