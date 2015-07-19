@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
-# Create your models here.
+from os.path import abspath  # для получения абсолютного пути
+from pytube import YouTube  # парсер ютуб-роликов
+
 
 class Site(models.Model):
     """
@@ -16,18 +18,6 @@ class State(models.Model):
     """
     Возможные статусы обработок видео
     """
-    # типы статусов (показывают этапы и состояния обратки видео)
-    # STATE_TYPES = (
-    #     ('1', 'video_loading'),  # выполняется загрузка видео
-    #     ('2', 'video_loading_success'),  # загрузка видео выполнена успешно
-    #     ('3', 'video_loading_error'),  # загрузка видео выполнена с ОШИБКОЙ
-    #     ('4', 'sound_process'),  # выполняется обработка звука
-    #     ('5', 'sound_process_success'),  # обработка звука выполнена успешно
-    #     ('6', 'sound_process_error'),  # обработка звука выполнена с ОШИБКОЙ
-    #     ('7', 'sound_search'),  # выполняется поиск названия аудио-трека
-    #     ('8', 'sound_search_success'),  # поиск названия аудио-трека выполнен успешно
-    #     ('9', 'sound_search_error'),  # поиск названия аудио-трека выполнен с ОШИБКОЙ
-    # )
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
     date_created = models.DateTimeField(default=timezone.now)
@@ -44,3 +34,20 @@ class Video(models.Model):
     state = models.ForeignKey(State)
     date_created = models.DateTimeField(default=timezone.now)
     trash = models.BooleanField(default=False)
+    # тут храним видосы
+    PATH_TO_VIDEO = abspath(__file__) + '/../tmp/video/'
+
+    def download(self, url):
+        """
+        Парсинг видео с ютуба
+        :param url: урла с ютуба или еще откуда-то
+        :return: возвращает true, если видео успешно загружено, в противном случае - возникнет исключение
+        """
+        yt = YouTube()
+        yt.url = url
+        video = yt.get('3gp', '144p', 'Simple')  # получаем видео в самом плохом качестве
+        if not self.id:
+            raise NameError('Не задан id для видеофайла!')
+        video.filename = self.id
+        video.download(self.PATH_TO_VIDEO)
+        return True
