@@ -3,17 +3,14 @@
 """
 from urllib.parse import urlparse  # для разбивки урлы на отдельные части
 from re import search
-import sys
-import os
-import hmac
-import hashlib
-import time
-import requests  #sudo easy_install requests or sudo pip install requests
-# from base64 import b64encode
-import base64
+from requests import post
+from base64 import b64encode
 from music_finder.settings import MY_SETTING
 from .models import Video
-
+from os.path import getsize
+import time
+import hmac
+import hashlib
 
 class ParseUrl(object):
     def __init__(self, url, time=0):
@@ -56,13 +53,13 @@ def get_audio_content(file: Video):
 
     string_to_sign = http_method + "\n"+http_uri + "\n" + access_key + "\n" + data_type + "\n" + signature_version + "\n" + str(timestamp)
 
-    sign = base64.b64encode(hmac.new(access_secret.encode('utf-8'), string_to_sign.encode('utf-8'), digestmod=hashlib.sha1).digest())
+    sign = b64encode(hmac.new(access_secret.encode('utf-8'), string_to_sign.encode('utf-8'), digestmod=hashlib.sha1).digest())
 
     # suported file formats: mp3,wav,wma,amr,ogg, ape,acc,spx,m4a,mp4,FLAC, etc
     # File size: < 1M , You'de better cut large file to small file, within 15 seconds data size is better
     path = file.get_path_to_audio()
     f = open(path, "rb")
-    sample_bytes = os.path.getsize(path)
+    sample_bytes = getsize(path)
 
     files = {'sample': f}
     data = {'access_key': access_key,
@@ -72,6 +69,6 @@ def get_audio_content(file: Video):
             'data_type': data_type,
             "signature_version": signature_version}
 
-    r = requests.post(requrl, files=files, data=data)
+    r = post(requrl, files=files, data=data)
     r.encoding = "utf-8"
     return r.text
