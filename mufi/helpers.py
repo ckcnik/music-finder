@@ -6,11 +6,12 @@ from re import search
 from requests import post
 from base64 import b64encode
 from music_finder.settings import MY_SETTING
-from .models import Video
+from .models import Video, State
 from os.path import getsize
 import time
 import hmac
 import hashlib
+import json
 
 
 class ParseUrl(object):
@@ -43,6 +44,8 @@ def get_audio_content(file: Video):
     Метод для идентификации аудио-файла
     :return:
     """
+    file.set_state(State.SOUND_SEARCH)
+
     access_key = MY_SETTING['ACRCLOUD']['ACCESS_KEY']
     access_secret = MY_SETTING['ACRCLOUD']['ACCESS_SECRET']
     requrl = "http://ap-southeast-1.api.acrcloud.com/v1/identify"
@@ -72,4 +75,4 @@ def get_audio_content(file: Video):
 
     r = post(requrl, files=files, data=data)
     r.encoding = "utf-8"
-    return r.text
+    return json.loads(r.text)

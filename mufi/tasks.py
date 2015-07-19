@@ -2,7 +2,7 @@ from celery import task
 from celery.utils.log import get_task_logger
 from django.shortcuts import get_object_or_404
 from .models import Video, Site, State
-from .helpers import ParseUrl
+from .helpers import ParseUrl, get_audio_content
 
 logger = get_task_logger(__name__)
 
@@ -36,7 +36,19 @@ def extract_audio(video_obj, url_obj):
     result = video_obj.extract_audio(url_obj.time)
     if result:
         video_obj.set_state(State.SOUND_PROCESS_SUCCESS)
+        audio_identify.apply_async((video_obj,), queue='audio_identify')
         video_obj.remove_video_file()
     else:
         video_obj.set_state(State.SOUND_PROCESS_ERROR)
     return result
+
+
+@task(name='audio identify')
+def audio_identify(video_obj):
+    request = get_audio_content(video_obj)
+    if request['status']['msg'] == 'Success':
+        video_obj.set_state(State.SOUND_SEARCH_SUCCESS)
+        video_obj.remove_audio_file()
+        logger.info(request)
+    else:
+        video_obj.set_state(State.SOUND_SEARCH_ERROR)
