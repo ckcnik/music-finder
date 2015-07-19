@@ -21,8 +21,8 @@ SET search_path = public, pg_catalog;
 -- Data for Name: mufi_site; Type: TABLE DATA; Schema: public; Owner: myprojectdbuser
 --
 
-INSERT INTO mufi_site (id, name, url, date_created, trash) VALUES (1, 'Ютуб', 'www.youtube.com', '2015-07-18 16:25:52+03', false);
-INSERT INTO mufi_site (id, name, url, date_created, trash) VALUES (3, 'Ютуб краткий (с временной меткой)', 'youtu.be', '2015-07-18 18:21:50+03', false);
+INSERT INTO mufi_site (id, name, url, date_created, trash) VALUES (1, 'Р®С‚СѓР±', 'www.youtube.com', '2015-07-18 16:25:52+03', false);
+INSERT INTO mufi_site (id, name, url, date_created, trash) VALUES (3, 'Р®С‚СѓР± РєСЂР°С‚РєРёР№ (СЃ РІСЂРµРјРµРЅРЅРѕР№ РјРµС‚РєРѕР№)', 'youtu.be', '2015-07-18 18:21:50+03', false);
 INSERT INTO mufi_site (id, name, url, date_created, trash) VALUES (4, 'youtube.com', 'youtube.com', '2015-07-18 18:47:21+03', false);
 
 
@@ -41,15 +41,15 @@ SELECT pg_catalog.setval('mufi_site_id_seq', 4, true);
 -- Data for Name: mufi_state; Type: TABLE DATA; Schema: public; Owner: myprojectdbuser
 --
 
-INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (1, 'video_loading', '2015-07-18 17:51:10+03', false, 'выполняется загрузка видео');
-INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (2, 'video_loading_success', '2015-07-18 17:51:22+03', false, 'загрузка видео выполнена успешно');
-INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (3, 'video_loading_error', '2015-07-18 17:51:32+03', false, 'загрузка видео выполнена с ОШИБКОЙ');
-INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (4, 'sound_process', '2015-07-18 17:51:37+03', false, 'выполняется обработка звука');
-INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (5, 'sound_process_success', '2015-07-18 17:51:43+03', false, 'обработка звука выполнена успешно');
-INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (6, 'sound_process_error', '2015-07-18 17:51:49+03', false, 'обработка звука выполнена с ОШИБКОЙ');
-INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (7, 'sound_search', '2015-07-18 17:51:55+03', false, 'выполняется поиск названия аудио-трека');
-INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (8, 'sound_search_success', '2015-07-18 17:52:01+03', false, ' поиск названия аудио-трека выполнен успешно');
-INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (9, 'sound_search_error', '2015-07-18 17:52:06+03', false, 'поиск названия аудио-трека выполнен с ОШИБКОЙ');
+INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (1, 'video_loading', '2015-07-18 17:51:10+03', false, 'РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ Р·Р°РіСЂСѓР·РєР° РІРёРґРµРѕ');
+INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (2, 'video_loading_success', '2015-07-18 17:51:22+03', false, 'Р·Р°РіСЂСѓР·РєР° РІРёРґРµРѕ РІС‹РїРѕР»РЅРµРЅР° СѓСЃРїРµС€РЅРѕ');
+INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (3, 'video_loading_error', '2015-07-18 17:51:32+03', false, 'Р·Р°РіСЂСѓР·РєР° РІРёРґРµРѕ РІС‹РїРѕР»РЅРµРЅР° СЃ РћРЁРР‘РљРћР™');
+INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (4, 'sound_process', '2015-07-18 17:51:37+03', false, 'РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РѕР±СЂР°Р±РѕС‚РєР° Р·РІСѓРєР°');
+INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (5, 'sound_process_success', '2015-07-18 17:51:43+03', false, 'РѕР±СЂР°Р±РѕС‚РєР° Р·РІСѓРєР° РІС‹РїРѕР»РЅРµРЅР° СѓСЃРїРµС€РЅРѕ');
+INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (6, 'sound_process_error', '2015-07-18 17:51:49+03', false, 'РѕР±СЂР°Р±РѕС‚РєР° Р·РІСѓРєР° РІС‹РїРѕР»РЅРµРЅР° СЃ РћРЁРР‘РљРћР™');
+INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (7, 'sound_search', '2015-07-18 17:51:55+03', false, 'РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РїРѕРёСЃРє РЅР°Р·РІР°РЅРёСЏ Р°СѓРґРёРѕ-С‚СЂРµРєР°');
+INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (8, 'sound_search_success', '2015-07-18 17:52:01+03', false, ' РїРѕРёСЃРє РЅР°Р·РІР°РЅРёСЏ Р°СѓРґРёРѕ-С‚СЂРµРєР° РІС‹РїРѕР»РЅРµРЅ СѓСЃРїРµС€РЅРѕ');
+INSERT INTO mufi_state (id, name, date_created, trash, description) VALUES (9, 'sound_search_error', '2015-07-18 17:52:06+03', false, 'РїРѕРёСЃРє РЅР°Р·РІР°РЅРёСЏ Р°СѓРґРёРѕ-С‚СЂРµРєР° РІС‹РїРѕР»РЅРµРЅ СЃ РћРЁРР‘РљРћР™');
 
 
 --
