@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from .tasks import download_video
 
@@ -13,5 +12,4 @@ def index(request):
     if url:
         time = int(request.GET.get('t', 0))  # на случай, если врем попадет в гет-параметр основного запроса
         download_video.apply_async((url, time), queue='download_video')
-
     return HttpResponse(url)

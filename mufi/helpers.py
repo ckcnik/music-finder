@@ -3,6 +3,16 @@
 """
 from urllib.parse import urlparse  # для разбивки урлы на отдельные части
 from re import search
+import sys
+import os
+import hmac
+import hashlib
+import time
+import requests  #sudo easy_install requests or sudo pip install requests
+# from base64 import b64encode
+import base64
+from music_finder.settings import MY_SETTING
+from .models import Video
 
 
 class ParseUrl(object):
@@ -28,3 +38,40 @@ class ParseUrl(object):
             # для случая, если в сервис отправят сокращенную урлу - https://youtu.be/V_siccikiLU?t=19
             video_uri = parsed_uri.path[1:]  # берем без слеша (первый символ)
         self.uri = video_uri
+
+
+def get_audio_content(file: Video):
+    """
+    Метод для идентификации аудио-файла
+    :return:
+    """
+    access_key = MY_SETTING['ACRCLOUD']['ACCESS_KEY']
+    access_secret = MY_SETTING['ACRCLOUD']['ACCESS_SECRET']
+    requrl = "http://ap-southeast-1.api.acrcloud.com/v1/identify"
+    http_method = "POST"
+    http_uri = "/v1/identify"
+    data_type = "audio"
+    signature_version = "1"
+    timestamp = time.time()
+
+    string_to_sign = http_method + "\n"+http_uri + "\n" + access_key + "\n" + data_type + "\n" + signature_version + "\n" + str(timestamp)
+
+    sign = base64.b64encode(hmac.new(access_secret.encode('utf-8'), string_to_sign.encode('utf-8'), digestmod=hashlib.sha1).digest())
+
+    # suported file formats: mp3,wav,wma,amr,ogg, ape,acc,spx,m4a,mp4,FLAC, etc
+    # File size: < 1M , You'de better cut large file to small file, within 15 seconds data size is better
+    path = file.get_path_to_audio()
+    f = open(path, "rb")
+    sample_bytes = os.path.getsize(path)
+
+    files = {'sample': f}
+    data = {'access_key': access_key,
+            'sample_bytes': sample_bytes,
+            'timestamp': str(timestamp),
+            'signature': sign,
+            'data_type': data_type,
+            "signature_version": signature_version}
+
+    r = requests.post(requrl, files=files, data=data)
+    r.encoding = "utf-8"
+    return r.text
