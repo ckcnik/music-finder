@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from .models import Video, Site, State
 from .helpers import ParseUrl, get_audio_content
+from .tasks import download_video
 
 
 def index(request):
@@ -10,15 +11,11 @@ def index(request):
     Главная страница
     """
     url = request.GET.get('url', '')
-    time = int(request.GET.get('t', 0))  # на случай, если врем попадет в гет-параметр основного запроса
-    url_obj = ParseUrl(url, time)
 
     # если урла есть, начинаем парсинг
     if url:
-        # получаем объект - сайт
-        site = get_object_or_404(Site, url=url_obj.domain, trash=False)
-        # получаем объект - статус
-        state = get_object_or_404(State, name=State.VIDEO_LOADING, trash=False)
+        time = int(request.GET.get('t', 0))  # на случай, если врем попадет в гет-параметр основного запроса
+        download_video.apply_async((url, time), queue='download_video')
 
         # оставляем запись в БД о запрошеннном видео
         video_obj = Video(uri=url_obj.uri, start_time=url_obj.time, site=site, state=state)
@@ -37,4 +34,4 @@ def index(request):
         else:
             video_obj.set_state(State.VIDEO_LOADING_ERROR)
 
-    return HttpResponse(text)
+    return HttpResponse(text)    return HttpResponse(url)
