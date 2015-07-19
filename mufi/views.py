@@ -18,7 +18,7 @@ def index(request):
         # получаем объект - сайт
         site = get_object_or_404(Site, url=url_obj.domain, trash=False)
         # получаем объект - статус
-        state = get_object_or_404(State, name='video_loading', trash=False)
+        state = get_object_or_404(State, name=State.VIDEO_LOADING, trash=False)
 
         # оставляем запись в БД о запрошеннном видео
         video_obj = Video(uri=url_obj.uri, start_time=url_obj.time, site=site, state=state)
@@ -26,14 +26,14 @@ def index(request):
 
         # если видео успешно скачано
         if video_obj.download(url):
-            video_obj.set_state('video_loading_success')
+            video_obj.set_state(State.VIDEO_LOADING_SUCCESS)
 
             # если успешно извлечен аудио-поток
             if video_obj.extract_audio(url_obj.time):
-                video_obj.set_state('sound_process_success')
+                video_obj.set_state(State.SOUND_PROCESS_SUCCESS)
             else:
-                video_obj.set_state('sound_process_error')
+                video_obj.set_state(State.SOUND_PROCESS_ERROR)
         else:
-            video_obj.set_state('video_loading_error')
+            video_obj.set_state(State.VIDEO_LOADING_ERROR)
 
     return HttpResponse(url_obj.time)

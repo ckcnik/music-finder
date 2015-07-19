@@ -27,6 +27,17 @@ class State(models.Model):
     date_created = models.DateTimeField(default=timezone.now)
     trash = models.BooleanField(default=False)
 
+    # константы состояний, они забиты в таблицу и помещены в код только для ясности
+    VIDEO_LOADING = 'video_loading'
+    VIDEO_LOADING_SUCCESS = 'video_loading_success'
+    VIDEO_LOADING_ERROR = 'video_loading_error'
+    SOUND_PROCESS = 'sound_process'
+    SOUND_PROCESS_SUCCESS = 'sound_process_success'
+    SOUND_PROCESS_ERROR = 'sound_process_error'
+    SOUND_SEARCH = 'sound_search'
+    SOUND_SEARCH_SUCCESS = 'sound_search_success'
+    SOUND_SEARCH_ERROR = 'sound_search_error'
+
 
 class Video(models.Model):
     """
@@ -43,6 +54,8 @@ class Video(models.Model):
     PATH_TO_VIDEO = dirname(abspath(__file__)) + '/tmp/video/'
     # временные аудио-файлы
     PATH_TO_AUDIO = dirname(abspath(__file__)) + '/tmp/audio/'
+    # время длительности аудиофайла
+    DURATION_SOUND_FILE = 15
 
     def download(self, url):
         """
@@ -59,7 +72,7 @@ class Video(models.Model):
         video.download(self.PATH_TO_VIDEO)
         return True
 
-    def extract_audio(self, seconds=0, duration=30):
+    def extract_audio(self, seconds=0, duration=DURATION_SOUND_FILE):
         """
         Извлечение указанного промежутка аудио-потока из видео-файла и
         загрузка его во временный аудио-файл
