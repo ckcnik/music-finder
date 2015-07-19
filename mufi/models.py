@@ -56,6 +56,10 @@ class Video(models.Model):
     PATH_TO_AUDIO = dirname(abspath(__file__)) + '/tmp/audio/'
     # время длительности аудиофайла
     DURATION_SOUND_FILE = 15
+    # единый формат аудио-файлов с которым мы работаем
+    AUDIO_FILE_FORMAT = '.mp3'
+    # единый формат видео-файлов с которым мы работаем
+    VIDEO_FILE_FORMAT = '.3gp'
 
     def download(self, url):
         """
@@ -83,8 +87,8 @@ class Video(models.Model):
         """
         self.set_state('sound_process')
 
-        video_file_path = self.PATH_TO_VIDEO + str(self.id) + '.3gp'
-        audio_file_path = self.PATH_TO_AUDIO + str(self.id) + '.mp3'
+        video_file_path = self.PATH_TO_VIDEO + str(self.id) + self.VIDEO_FILE_FORMAT
+        audio_file_path = self.PATH_TO_AUDIO + str(self.id) + self.AUDIO_FILE_FORMAT
 
         if not isfile(video_file_path):
             self.set_state('sound_process_error')
@@ -107,3 +111,11 @@ class Video(models.Model):
         state = get_object_or_404(State, name=name, trash=False)
         self.state = state
         self.save()
+
+    def get_path_to_audio(self):
+        path = self.PATH_TO_AUDIO + str(self.id) + self.AUDIO_FILE_FORMAT
+        return path
+
+    def get_path_to_video(self):
+        path = self.PATH_TO_VIDEO + str(self.id) + self.VIDEO_FILE_FORMAT
+        return path

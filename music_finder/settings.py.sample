@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djcelery',
-    'mufi',
+    'mufi', # подключил ядро парсера
 )
 
 MIDDLEWARE_CLASSES = (
@@ -120,3 +120,12 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Moscow'
+
+
+# кастомные сеттинги проекта
+MY_SETTING = {
+    'ACRCLOUD': {
+        'ACCESS_KEY': '78004df94475843124e78634d2d7de60',
+        'ACCESS_SECRET': '0uECti2xjleseBUxpBkBMeYnevWNTc6ErJUUMts',
+    }
+}
