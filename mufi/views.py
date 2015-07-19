@@ -1,8 +1,4 @@
-from django.shortcuts import render
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from .models import Video, Site, State
-from .helpers import ParseUrl, get_audio_content
 from .tasks import download_video
 
 
@@ -16,22 +12,4 @@ def index(request):
     if url:
         time = int(request.GET.get('t', 0))  # на случай, если врем попадет в гет-параметр основного запроса
         download_video.apply_async((url, time), queue='download_video')
-
-        # оставляем запись в БД о запрошеннном видео
-        video_obj = Video(uri=url_obj.uri, start_time=url_obj.time, site=site, state=state)
-        video_obj.save()
-        # text = get_audio_content(video_obj)
-        # если видео успешно скачано
-        if video_obj.download(url):
-            video_obj.set_state(State.VIDEO_LOADING_SUCCESS)
-
-            # если успешно извлечен аудио-поток
-            if video_obj.extract_audio(url_obj.time):
-                video_obj.set_state(State.SOUND_PROCESS_SUCCESS)
-                text = get_audio_content(video_obj)
-            else:
-                video_obj.set_state(State.SOUND_PROCESS_ERROR)
-        else:
-            video_obj.set_state(State.VIDEO_LOADING_ERROR)
-
-    return HttpResponse(text)    return HttpResponse(url)
+    return HttpResponse(url)
