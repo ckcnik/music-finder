@@ -15,19 +15,27 @@
 * Зависимость от пакета - [Redis](https://pypi.python.org/pypi/redis)
 
 #### Установка Django celery ####
-Выполнить команду:<br>
-``` $ sudo pip install django-celery ```<br>
-<br>
-В <b>settings.py</b> добвить строку<br>
+Выполнить команду:
+```
+#!bash
+$ sudo pip install django-celery
+```
+
+В *settings.py* добвить строку
 ``` INSTALLED_APPS += ("djcelery", ) ```
 
 #### Установка Redis ####
-Для установки redis выполнить следующие команды:<br>
-``` $ sudo apt-get install redis-server ```<br>
-``` $ sudo pi install redis```<br>
-<br>
-Проверка:<br>
-``` $ redis-cli ping ```<br>
+Для установки redis выполнить следующие команды:
+```
+#!bash
+$ sudo apt-get install redis-server
+$ sudo pi install redis
+```
+Проверка:
+```
+#!bash
+$ redis-cli ping
+```
 Ответ: `PONG`
 
 ### Contribution guidelines ###
