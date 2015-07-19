@@ -20,16 +20,20 @@
 #!bash
 $ sudo pip install django-celery
 ```
-
 В *settings.py* добвить строку
 ``` INSTALLED_APPS += ("djcelery", ) ```
+Создать необходимые таблицы в БД
+```
+#!bash
+$ python manage.py migrate
+```
 
 #### Установка Redis ####
 Для установки redis выполнить следующие команды:
 ```
 #!bash
 $ sudo apt-get install redis-server
-$ sudo pi install redis
+$ sudo pip install redis
 ```
 Проверка:
 ```
