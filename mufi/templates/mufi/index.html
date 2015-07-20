@@ -2,8 +2,12 @@
 <link rel="stylesheet" type="text/css" href="{% static 'mufi/style.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'mufi/animate.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'mufi/bootstrap.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'mufi/jquery.nouislider.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'mufi/jasny-bootstrap.min.css' %}">
 <script src="{% static 'mufi/js/jquery.js' %}"></script>
 <script src="{% static 'mufi/js/script.js' %}"></script>
+<script src="{% static 'mufi/js/jquery.nouislider.min.js' %}"></script>
+<script src="{% static 'mufi/js/jasny-bootstrap.min.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'mufi/font-awesome.min.css' %}" />
 
 
@@ -21,9 +25,28 @@
                             <input type="search" class="form-control" name="" value="" placeholder="Введите URL видео-ролика YouTube!" required="">
                             <input type="submit" value="Поиск" class="btn">
                         </fieldset>
+                        <div style="float: left;width: 200px;margin: 20px 0 0 15px;">
+                            <label for="start_position" style="font-size: 20px;">Позиция старта</label>
+                            <input id="start_position" type="text" class="form-control" data-mask="00:00:00" placeholder="">
+                        </div>
+                        <div style="float: right;margin: 20px 15px 0 0;">
+                            <label for="basic_slider" style="font-size: 20px;margin-top: 5px">Длительность</label>
+                            <div id="basic_slider" style="width: 400px;"></div>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </section>
 </div>
+<script>
+    $("#basic_slider").noUiSlider({
+        start: 40,
+        behaviour: 'tap',
+        connect: 'upper',
+        range: {
+            'min':  20,
+            'max':  80
+        }
+    });
+</script>
