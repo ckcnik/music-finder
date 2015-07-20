@@ -352,7 +352,7 @@ section .heading-group h3{ padding-top:10px;}
 	top:0px;
 	width:100%;
 	height:100%;
-	background:rgba(45,64,74,0.80);
+	background:rgba(45,64,74,0.40);
 	z-index:1;
 }
 
@@ -2371,4 +2371,5 @@ section.live-chat h2{
 
 .banner {
 	margin-top: 9%;
+    background-position-y: 50px;
 }
