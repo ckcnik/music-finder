@@ -1,0 +1,29 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'mufi/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'mufi/animate.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'mufi/bootstrap.css' %}" />
+<script src="{% static 'mufi/js/jquery.js' %}"></script>
+<script src="{% static 'mufi/js/script.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'mufi/font-awesome.min.css' %}" />
+
+
+<div class="page-wrapper">
+    <!--Preloader Box-->
+    <div class="preloader" style="width: 1905px; height: 968px; display: none;"></div>
+
+    <section class="current-div banner home-banner" style="background-image:url(../../static/mufi/images/parallax_bg20.jpg);">
+        <div class="auto-box">
+            <div class="row">
+                <!-- Form -->
+                <div class="form animated fadeInUp in" data-animation="fadeInUp" data-transition="1500">
+                    <form method="post" action="">
+                        <fieldset>
+                            <input type="search" class="form-control" name="" value="" placeholder="Введите URL видео-ролика YouTube!" required="">
+                            <input type="submit" value="Search Now!" class="btn">
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
