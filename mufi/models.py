@@ -141,3 +141,27 @@ class Video(models.Model):
         :return: None
         """
         remove(self.get_path_to_audio())
+
+
+class Audio(models.Model):
+    """
+    Список аудио-записей
+    """
+    title = models.CharField(max_length=255)
+    artist = models.CharField(max_length=255)
+    album = models.CharField(max_length=255)
+    acrid = models.CharField(max_length=32)
+    date_created = models.DateTimeField(default=timezone.now)
+    trash = models.BooleanField(default=False)
+
+
+class Result(models.Model):
+    """
+    Модель для хранения результатов поиска
+    """
+    video = models.ForeignKey(Video)
+    audio = models.ForeignKey(Audio, null=True)
+    response = models.PositiveIntegerField(default=0)
+    play_offset = models.PositiveIntegerField(default=0)
+    date_created = models.DateTimeField(default=timezone.now)
+    trash = models.BooleanField(default=False)

@@ -1,7 +1,8 @@
 from celery import task
 from celery.utils.log import get_task_logger
 from django.shortcuts import get_object_or_404
-from .models import Video, Site, State
+from django.db import transaction, IntegrityError
+from .models import Video, Site, State, Result, Audio
 from .helpers import ParseUrl, get_audio_content
 
 logger = get_task_logger(__name__)
@@ -36,8 +37,8 @@ def extract_audio(video_obj, url_obj):
     result = video_obj.extract_audio(url_obj.time)
     if result:
         video_obj.set_state(State.SOUND_PROCESS_SUCCESS)
-        audio_identify.apply_async((video_obj,), queue='audio_identify')
         video_obj.remove_video_file()
+        audio_identify.apply_async((video_obj,), queue='audio_identify')
     else:
         video_obj.set_state(State.SOUND_PROCESS_ERROR)
     return result
@@ -45,10 +46,22 @@ def extract_audio(video_obj, url_obj):
 
 @task(name='audio identify')
 def audio_identify(video_obj):
-    request = get_audio_content(video_obj)
-    if request['status']['msg'] == 'Success':
+    response = get_audio_content(video_obj)
+    metainfos = response['metainfos']
+    video_obj.remove_audio_file()
+
+    with transaction.atomic():
+        for info in metainfos:
+            audio = Audio.objects.filter(acrid=info['acrid'], trash=False)
+            if not audio:
+                audio = Audio(title=info['title'], artist=info['artist'], album=info['album'], acrid=info['acrid'])
+                audio.save()
+            else:
+                audio = audio[0]
+            result = Result(video=video_obj, audio=audio, response=response['status']['code'], play_offset=info['play_offset'])
+            result.save()
+
+    if response['status']['code'] == 0:
         video_obj.set_state(State.SOUND_SEARCH_SUCCESS)
-        video_obj.remove_audio_file()
-        logger.info(request)
     else:
         video_obj.set_state(State.SOUND_SEARCH_ERROR)
