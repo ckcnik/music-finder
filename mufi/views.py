@@ -17,5 +17,7 @@ def index(request):
         # если урла есть, начинаем парсинг
         if url:
             download_video.apply_async((url, time), queue='download_video')
-
-    return render(request, 'mufi/index.html', {'form': form})
+    if request.is_ajax():
+        pass
+    else:
+        return render(request, 'mufi/index.html', {'form': form})

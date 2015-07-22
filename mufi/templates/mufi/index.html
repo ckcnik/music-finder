@@ -1,3 +1,6 @@
+{% load staticfiles %}
+<script src="/static/js/jquery.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'mufi/style.css' %}" />
 {# Load the tag library #}
 {% load bootstrap3 %}
 
@@ -10,13 +13,40 @@
 
 <div class="container">
 {# Display a form #}
-<form action="/url/to/submit/" method="post" class="form">
+<form id='youtube-form' action="/" method="post" class="form">
   {% csrf_token %}
   {% bootstrap_form form %}
   {% buttons %}
-    <button type="submit" class="btn btn-primary">
+    <button id='submit-button' type="submit" class="btn btn-primary">
       {% bootstrap_icon "star" %} Submit
     </button>
   {% endbuttons %}
 </form>
+<img src="../../static/mufi/images/loader.gif" class="loader">
+<div id="parsing-result"></div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    // Submit post on submit
+    $('#submit-button').on('click', function(event){
+        $('img.loader').show();
+        event.preventDefault();
+        console.log("form submitted!")  // sanity check
+        var frm = $('#youtube-form');
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $("#parsing-result").html(data);
+                $('img.loader').hide();
+            },
+            error: function(data) {
+                $("#parsing-result").html("Something went wrong!");
+            }
+        });
+        return false;
+    });
+});
+</script>
