@@ -1,54 +1,20 @@
 {% load staticfiles %}
 <link rel="stylesheet" type="text/css" href="{% static 'mufi/style.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'mufi/animate.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'mufi/bootstrap.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'mufi/jquery.nouislider.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'mufi/jasny-bootstrap.min.css' %}">
-<script src="{% static 'mufi/js/jquery.js' %}"></script>
-<script src="{% static 'mufi/js/script.js' %}"></script>
-<script src="{% static 'mufi/js/jquery.nouislider.min.js' %}"></script>
-<script src="{% static 'mufi/js/jasny-bootstrap.min.js' %}"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'mufi/font-awesome.min.css' %}" />
 
-
-<div class="page-wrapper">
-    <!--Preloader Box-->
-    <div class="preloader" style="width: 1905px; height: 968px; display: none;"></div>
-
-    <section class="current-div banner home-banner" style="background-image:url(../../static/mufi/images/3.jpg);">
-        <div class="auto-box">
-            <div class="row">
-                <!-- Form -->
-                <div class="form animated fadeInUp in" data-animation="fadeInUp" data-transition="1500">
-                    <form method="post" action="/">
-                        {% csrf_token %}
-                        <fieldset>
-                            {{ form.url }}
-                            <input type="submit" value="Поиск" class="btn">
-                        </fieldset>
-                        <div style="float: left;width: 200px;margin: 20px 0 0 15px;">
-                            <label for="time_start" style="font-size: 20px;">Позиция старта</label>
-                            {{ form.time_start }}
-                        </div>
-                        <div style="float: right;margin: 20px 15px 0 0;">
-                            <label for="basic_slider" style="font-size: 20px;margin-top: 5px">Длительность</label>
-                            {{ form.duration }}
-                            <div id="basic_slider" style="width: 400px;"></div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
-<script>
-    $("#basic_slider").noUiSlider({
-        start: 40,
-        behaviour: 'tap',
-        connect: 'upper',
-        range: {
-            'min':  20,
-            'max':  80
-        }
-    });
-</script>
+<!-- Form -->
+<form method="post" action="/">
+    {% csrf_token %}
+    <fieldset>
+        {{ form.url }}
+        <input type="submit" value="Поиск" class="btn">
+    </fieldset>
+    <div style="float: left;width: 200px;margin: 20px 0 0 15px;">
+        <label for="time_start" style="font-size: 20px;">Позиция старта</label>
+        {{ form.time_start }}
+    </div>
+    <div style="float: right;margin: 20px 15px 0 0;">
+        <label for="basic_slider" style="font-size: 20px;margin-top: 5px">Длительность</label>
+        {{ form.duration }}
+        <div id="basic_slider" style="width: 400px;"></div>
+    </div>
+</form>
