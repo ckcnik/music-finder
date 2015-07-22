@@ -53,3 +53,5 @@ def audio_identify(video_obj):
         video_obj.set_state(State.SOUND_SEARCH_SUCCESS)
     else:
         video_obj.set_state(State.SOUND_SEARCH_ERROR)
+
+    return response['status']['msg'] + ': ' + metainfos
