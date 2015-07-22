@@ -4,6 +4,7 @@ from .forms import UrlSendForm
 from django.http import HttpResponse
 from .helpers import ParseUrl
 from .models import Site, State, Video
+from json import dumps
 
 
 def index(request):
@@ -13,7 +14,7 @@ def index(request):
     form = UrlSendForm(request.POST)
 
     id = 0
-    if (request.method == 'POST' and form.is_valid()):
+    if request.method == 'POST' and form.is_valid():
         url = form.cleaned_data['url']
         time = form.cleaned_data['time_start'] if form.cleaned_data['time_start'] else 0
         duration = form.cleaned_data['duration'] if form.cleaned_data['duration'] else 15
@@ -38,3 +39,20 @@ def index(request):
         return HttpResponse(id)
     else:
         return render(request, 'mufi/index.html', {'form': form})
+
+
+def checker_state(request):
+    result = {'status': 'none'}
+    if request.method == 'POST':
+        video_id = request.POST['videoId']
+        video = Video.objects.get(pk=video_id)
+        if video.state.name == State.SOUND_SEARCH_SUCCESS:
+            results = video.result_set.all()
+            dict_array = [{'title': r.audio.title, 'artist': r.audio.artist, 'album': r.audio.album} for r in results]
+            result = {'status': 'ok', 'songs': dict_array}
+        elif video.state.name in (State.SOUND_PROCESS_ERROR, State.SOUND_SEARCH_ERROR, State.VIDEO_LOADING_ERROR):
+            result = {'status': 'error'}
+        else:
+            result = {'status': 'pending'}
+
+    return HttpResponse(dumps(result))

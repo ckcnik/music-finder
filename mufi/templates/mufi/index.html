@@ -1,5 +1,6 @@
 {% load staticfiles %}
 <script src="{% static 'mufi/js/jquery.js' %}"></script>
+<script src="{% static 'mufi/js/jquery.cookie.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'mufi/style.css' %}" />
 {# Load the tag library #}
 {% load bootstrap3 %}
@@ -28,10 +29,11 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+    var csrftoken = $.cookie('csrftoken');
+    var timerId = 0;
     // Submit post on submit
     $('#submit-button').on('click', function(event){
         $('img.loader').show();
-        $('#parsing-result').show();
         event.preventDefault();
         console.log("form submitted!")  // sanity check
         var frm = $('#youtube-form');
@@ -40,8 +42,17 @@ $(document).ready(function() {
             url: frm.attr('action'),
             data: frm.serialize(),
             success: function (data) {
-                $("#parsing-result").html(data);
-                $('img.loader').hide();
+                console.log("start checker");
+                // начать повторы с интервалом 2 сек
+                timerId = setInterval(function() {
+                    checkerState(data);
+                }, 2000);
+
+                // через 2 мин остановить повторы
+                setTimeout(function() {
+                  clearInterval(timerId);
+                  console.log("stop checker");
+                }, 240000);
             },
             error: function(data) {
                 $("#parsing-result").html("Something went wrong!");
@@ -49,5 +60,36 @@ $(document).ready(function() {
         });
         return false;
     });
+
+    function checkerState(videoId) {
+        console.log("check");
+        $.ajax({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            type: 'POST',
+            url: 'checker_state',
+            data: {'videoId': videoId},
+            success: function (data) {
+                var response = $.parseJSON( data );
+                if (response.status == 'ok') {
+                    $("#parsing-result").html(data);
+                    $('#parsing-result').show();
+                    $('img.loader').hide();
+                    clearInterval(timerId);
+                }
+            },
+            error: function(data) {
+                $("#parsing-result").html("Something went wrong!");
+            }
+        });
+    }
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
 });
 </script>
