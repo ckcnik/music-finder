@@ -2,6 +2,7 @@
 <script src="{% static 'mufi/js/jquery.js' %}"></script>
 <script src="{% static 'mufi/js/jquery.cookie.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'mufi/style.css' %}" />
+
 {# Load the tag library #}
 {% load bootstrap3 %}
 
@@ -12,19 +13,33 @@
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
 
-<div class="container">
-{# Display a form #}
-<form id='youtube-form' action="/" method="post" class="form">
-  {% csrf_token %}
-  {% bootstrap_form form %}
-  {% buttons %}
-    <button id='submit-button' type="submit" class="btn btn-primary">
-      {% bootstrap_icon "star" %} Submit
-    </button>
-  {% endbuttons %}
-</form>
-<img src="{% static 'mufi/images/loader.gif' %}" class="loader">
-<div class="alert alert-success" id="parsing-result"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center"></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-4 text-center"></div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+            <div class="well well-sm">
+                <form id='youtube-form' action="/" method="post">
+                    {% csrf_token %}
+                    {% bootstrap_field form.url layout='inline' %}
+                    {% bootstrap_field form.time_start layout='inline' %}
+                    <div class="form-group text-center">
+                        <button id='submit-button' type="submit" class="btn btn-primary">
+                            {% bootstrap_icon "star" %} Определить
+                        </button>
+                    </div>
+                </form>
+                <img src="{% static 'mufi/images/loader.gif' %}" class="loader">
+                <div class="alert alert-success" id="parsing-result"></div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-4 text-center"></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center"></div>
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -42,17 +57,19 @@ $(document).ready(function() {
             url: frm.attr('action'),
             data: frm.serialize(),
             success: function (data) {
-                console.log("start checker");
-                // начать повторы с интервалом 2 сек
-                timerId = setInterval(function() {
-                    checkerState(data);
-                }, 2000);
+                if (parseInt(data) != 0) {
+                    console.log("start checker");
+                    // начать повторы с интервалом 2 сек
+                    timerId = setInterval(function () {
+                        checkerState(data);
+                    }, 2000);
 
-                // через 2 мин остановить повторы
-                setTimeout(function() {
-                  clearInterval(timerId);
-                  console.log("stop checker");
-                }, 240000);
+                    // через 2 мин остановить повторы
+                    setTimeout(function () {
+                        clearInterval(timerId);
+                        console.log("stop checker");
+                    }, 240000);
+                }
             },
             error: function(data) {
                 $("#parsing-result").html("Something went wrong!");
