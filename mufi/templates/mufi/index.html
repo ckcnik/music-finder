@@ -20,17 +20,19 @@
             <div class="row">
                 <!-- Form -->
                 <div class="form animated fadeInUp in" data-animation="fadeInUp" data-transition="1500">
-                    <form method="post" action="">
+                    <form method="post" action="/">
+                        {% csrf_token %}
                         <fieldset>
-                            <input type="search" class="form-control" name="" value="" placeholder="Введите URL видео-ролика YouTube!" required="">
+                            {{ form.url }}
                             <input type="submit" value="Поиск" class="btn">
                         </fieldset>
                         <div style="float: left;width: 200px;margin: 20px 0 0 15px;">
-                            <label for="start_position" style="font-size: 20px;">Позиция старта</label>
-                            <input id="start_position" type="text" class="form-control" data-mask="00:00:00" placeholder="">
+                            <label for="time_start" style="font-size: 20px;">Позиция старта</label>
+                            {{ form.time_start }}
                         </div>
                         <div style="float: right;margin: 20px 15px 0 0;">
                             <label for="basic_slider" style="font-size: 20px;margin-top: 5px">Длительность</label>
+                            {{ form.duration }}
                             <div id="basic_slider" style="width: 400px;"></div>
                         </div>
                     </form>
