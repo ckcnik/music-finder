@@ -8,6 +8,7 @@
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
 
+<div class="container">
 {# Display a form #}
 <form action="/url/to/submit/" method="post" class="form">
   {% csrf_token %}
@@ -18,3 +19,4 @@
     </button>
   {% endbuttons %}
 </form>
+</div>
