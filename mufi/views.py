@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .tasks import download_video
 from .forms import UrlSendForm
 from django.http import HttpResponse
+from .helpers import ParseUrl
+from .models import Site, State, Video
 
 
 def index(request):
@@ -10,6 +12,7 @@ def index(request):
     """
     form = UrlSendForm(request.POST)
 
+    id = 0
     if (request.method == 'POST' and form.is_valid()):
         url = form.cleaned_data['url']
         time = form.cleaned_data['time_start'] if form.cleaned_data['time_start'] else 0
@@ -27,10 +30,11 @@ def index(request):
             # оставляем запись в БД о запрошеннном видео
             video_obj = Video(uri=url_obj.uri, start_time=url_obj.time, site=site, state=state)
             video_obj.save()
+            id = video_obj.id
 
             download_video.apply_async((video_obj, url, url_obj.time), queue='download_video')
 
     if request.is_ajax():
-        return HttpResponse(video_obj.id)
+        return HttpResponse(id)
     else:
         return render(request, 'mufi/index.html', {'form': form})

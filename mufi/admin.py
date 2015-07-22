@@ -26,7 +26,7 @@ class VideoAdmin(admin.ModelAdmin):
     добавил в админку модель видосов (стата по запрашиваемым видео)
     """
     # fields = ['uri', 'start_time', 'site', 'state', 'date_created', 'trash']
-    list_display = ('uri', 'start_time', 'get_site_url', 'get_state', 'date_created', 'trash')
+    list_display = ('id', 'uri', 'start_time', 'get_site_url', 'get_state', 'date_created', 'trash')
 
     def get_site_url(self, obj):
         return obj.site.url
