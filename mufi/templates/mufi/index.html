@@ -1,5 +1,5 @@
 {% load staticfiles %}
-<script src="/static/js/jquery.js"></script>
+<script src="{% static 'mufi/js/jquery.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'mufi/style.css' %}" />
 {# Load the tag library #}
 {% load bootstrap3 %}
@@ -22,7 +22,7 @@
     </button>
   {% endbuttons %}
 </form>
-<img src="../../static/mufi/images/loader.gif" class="loader">
+<img src="{% static 'mufi/images/loader.gif' %}" class="loader">
 <div id="parsing-result"></div>
 </div>
 
