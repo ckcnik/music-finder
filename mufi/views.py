@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .tasks import download_video
 from .forms import UrlSendForm
+from django.http import HttpResponse
 
 
 def index(request):
@@ -16,8 +17,20 @@ def index(request):
 
         # если урла есть, начинаем парсинг
         if url:
-            download_video.apply_async((url, time), queue='download_video')
+            url_obj = ParseUrl(url, time)
+
+            # получаем объект - сайт
+            site = get_object_or_404(Site, url=url_obj.domain, trash=False)
+            # получаем объект - статус
+            state = get_object_or_404(State, name=State.VIDEO_LOADING, trash=False)
+
+            # оставляем запись в БД о запрошеннном видео
+            video_obj = Video(uri=url_obj.uri, start_time=url_obj.time, site=site, state=state)
+            video_obj.save()
+
+            download_video.apply_async((video_obj, url, url_obj.time), queue='download_video')
+
     if request.is_ajax():
-        pass
+        return HttpResponse(video_obj.id)
     else:
         return render(request, 'mufi/index.html', {'form': form})
