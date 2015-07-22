@@ -2,3 +2,7 @@ img.loader {
 	display: none;
 	width: 100px;
 }
+
+#parsing-result {
+	display: none;
+}
