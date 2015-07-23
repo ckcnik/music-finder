@@ -3,3 +3,6 @@
 __pycache__
 
 music_finder/settings.py
+/logs/
+/env/
+/static/
