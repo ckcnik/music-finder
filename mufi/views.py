@@ -33,7 +33,7 @@ def index(request):
             video_obj.save()
             id = video_obj.id
 
-            download_video.apply_async((video_obj, url, url_obj.time), queue='download_video')
+            download_video.apply_async((video_obj, url, url_obj.time, duration), queue='download_video')
 
     if request.is_ajax():
         return HttpResponse(id)

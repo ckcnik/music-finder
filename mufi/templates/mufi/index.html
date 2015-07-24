@@ -1,3 +1,7 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 {% load staticfiles %}
 <script src="{% static 'mufi/js/jquery.js' %}"></script>
 <script src="{% static 'mufi/js/jquery.cookie.js' %}"></script>
@@ -25,6 +29,7 @@
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-4 text-center"></div>
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4" style="position: relative;height: 100%;">
             <div class="well well-sm youtube-well">
+                <div class="text-center"><h1>Inaux.net</h1></div>
                 <form id='youtube-form' action="/" method="post">
                     {% csrf_token %}
                     <div class="row">
@@ -36,14 +41,20 @@
                         <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
                             {% bootstrap_field form.time_start layout='inline' %}
                         </div>
-                        <div id="youtube-form-slider" class="col-xs-8 col-sm-5 col-md-4 col-lg-4" style="margin-top: 10px;"></div>
-                        <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
+                        <div class="col-xs-5 col-sm-3 col-md-3 col-lg-4 text-right" style="margin-top: 6px;">
                             <div class="form-group">
-                                <label class="sr-only" for="id_duration">Duration</label>
-                                <input class="form-control" id="id_duration" name="duration" title="" type="text" disabled="disabled">
+                                <label for="id_duration">Длительность:</label>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-sm-2 col-md-3 col-lg-3">
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3" id="youtube-form-slider" style="margin-top: 10px;"></div>
+                        <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            <div class="form-group">
+                                <input class="form-control" id="id_duration" name="duration" title="" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="form-group text-center">
                                 <button id='submit-button' type="submit" class="btn btn-primary">
                                     {% bootstrap_icon "star" %} Определить
@@ -71,7 +82,7 @@ $(document).ready(function() {
     $('#submit-button').on('click', function(event){
         $('img.loader').show();
         event.preventDefault();
-        console.log("form submitted!")  // sanity check
+        console.log("form submitted!");
         var frm = $('#youtube-form');
         $.ajax({
             type: frm.attr('method'),

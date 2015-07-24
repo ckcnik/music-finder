@@ -8,21 +8,21 @@ logger = get_task_logger(__name__)
 
 
 @task(name='download video')
-def download_video(video_obj, url, time):
+def download_video(video_obj, url, time, duration):
     # если видео успешно скачано
     result = video_obj.download(url)
     if result:
         video_obj.set_state(State.VIDEO_LOADING_SUCCESS)
-        extract_audio.apply_async((video_obj, time), queue='extract_audio')
+        extract_audio.apply_async((video_obj, time, duration), queue='extract_audio')
     else:
         video_obj.set_state(State.VIDEO_LOADING_ERROR)
     return result
 
 
 @task(name='extract audio')
-def extract_audio(video_obj, time):
+def extract_audio(video_obj, time, duration):
     # если успешно извлечен аудио-поток
-    result = video_obj.extract_audio(time)
+    result = video_obj.extract_audio(time, duration)
     if result:
         video_obj.set_state(State.SOUND_PROCESS_SUCCESS)
         video_obj.remove_video_file()
@@ -36,7 +36,7 @@ def extract_audio(video_obj, time):
 def audio_identify(video_obj):
     response = get_audio_content(video_obj)
     metainfos = response['metainfos'] if 'metainfos' in response else []
-    video_obj.remove_audio_file()
+    # video_obj.remove_audio_file()
 
     with transaction.atomic():
         for info in metainfos:
