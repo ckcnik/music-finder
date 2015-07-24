@@ -36,7 +36,7 @@ def extract_audio(video_obj, time, duration):
 def audio_identify(video_obj):
     response = get_audio_content(video_obj)
     metainfos = response['metainfos'] if 'metainfos' in response else []
-    # video_obj.remove_audio_file()
+    video_obj.remove_audio_file()
 
     with transaction.atomic():
         for info in metainfos:

@@ -63,8 +63,9 @@
                         </div>
                     </div>
                 </form>
-                <img src="{% static 'mufi/images/loader.gif' %}" class="loader">
+                <div class="text-center loader"><img src="{% static 'mufi/images/loader.gif' %}"></div>
                 <div class="alert alert-success" id="parsing-result"></div>
+                <div class="alert alert-danger" id="parsing-result-error"></div>
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-4 text-center"></div>
@@ -80,7 +81,9 @@ $(document).ready(function() {
     var timerId = 0;
     // Submit post on submit
     $('#submit-button').on('click', function(event){
-        $('img.loader').show();
+        $("#parsing-result").hide();
+        $("#parsing-result-error").hide();
+        $('.loader').show();
         event.preventDefault();
         console.log("form submitted!");
         var frm = $('#youtube-form');
@@ -134,11 +137,29 @@ $(document).ready(function() {
             data: {'videoId': videoId},
             success: function (data) {
                 var response = $.parseJSON( data );
-                if (response.status == 'ok') {
-                    $("#parsing-result").html(data);
-                    $('#parsing-result').show();
-                    $('img.loader').hide();
+                if (response.status != 'pending') {
                     clearInterval(timerId);
+                    $('.loader').hide();
+                }
+                var resultOk = $("#parsing-result");
+                var resultError = $("#parsing-result-error");
+                if (response.status == 'ok') {
+                    var table = '';
+                    var songs = response.songs;
+                    for (var key in songs) {
+                        table += '<table class="table table-bordered" style="background-color: white;margin-bottom: 0;"><tbody>';
+                            table += '<tr><th scope="row">Название</th><td>' + songs[key]['title'] + '</td></tr>';
+                            table += '<tr><th scope="row">Исполнитель</th><td>' + songs[key]['artist'] + '</td></tr>';
+                            table += '<tr><th scope="row">Альбом</th><td>' + songs[key]['album'] + '</td></tr>';
+                        table += '</tbody></table>';
+                    }
+                    resultError.hide();
+                    resultOk.html(table);
+                    resultOk.show();
+                } else if (response.status == 'error') {
+                    resultOk.hide();
+                    resultError.html('<strong>Ошибка!</strong> Попробуйте позже.');
+                    resultError.show();
                 }
             },
             error: function(data) {

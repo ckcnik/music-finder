@@ -1,9 +1,9 @@
-img.loader {
+.loader {
 	display: none;
-	width: 100px;
 }
 
-#parsing-result {
+#parsing-result,
+#parsing-result-error {
 	display: none;
 }
 
