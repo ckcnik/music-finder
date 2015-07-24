@@ -1,6 +1,6 @@
 #!/bin/bash
 echo $0: Creating virtual environment
-virtualenv --prompt="<myenv>" ./env
+virtualenv-3.4 --prompt="<myenv>" ./env
 
 mkdir ./logs
 
@@ -10,6 +10,6 @@ export PIP_REQUIRE_VIRTUALENV=true
 ./env/bin/pip install --requirement=./requirements.txt --log=./logs/build_pip_packages.log
 
 echo $0: Making virtual environment relocatable
-virtualenv --relocatable ./env
+virtualenv-3.4 --relocatable ./env
 
 echo $0: Creating virtual environment finished.
