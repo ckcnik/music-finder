@@ -3,6 +3,7 @@ echo $0: Creating virtual environment
 virtualenv-3.4 --prompt="<myenv>" ./env
 
 mkdir ./logs
+mkdir ./pids # для gunicorn
 
 echo $0: Installing dependencies
 source ./env/bin/activate

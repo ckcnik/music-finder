@@ -6,3 +6,4 @@ music_finder/settings.py
 /logs/
 /env/
 /static/
+/pids/
