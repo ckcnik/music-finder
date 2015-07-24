@@ -6,3 +6,4 @@ requests>=2.2.1
 bootstrap-admin>=0.3.6
 django-bootstrap3>=6.1.0
 #pytube>=0.2.0
+gunicorn>=19.3.0
