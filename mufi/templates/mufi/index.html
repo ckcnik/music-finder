@@ -6,6 +6,7 @@
 <script src="{% static 'mufi/js/jquery.js' %}"></script>
 <script src="{% static 'mufi/js/jquery.cookie.js' %}"></script>
 <script src="{% static 'mufi/js/jquery-ui.js' %}"></script>
+<script src="{% static 'mufi/js/jquery.mask.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'mufi/jquery-ui.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'mufi/jquery-ui.structure.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'mufi/jquery-ui.theme.css' %}" />
@@ -32,21 +33,29 @@
                 <div class="text-center"><h1>Inaux.net</h1></div>
                 <form id='youtube-form' action="/" method="post">
                     {% csrf_token %}
+                    {% bootstrap_field form.time_start %}
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             {% bootstrap_field form.url layout='inline' %}
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
-                            {% bootstrap_field form.time_start layout='inline' %}
+                        <div class="col-xs-6 col-sm-2 col-md-2 col-lg-2" style="margin-top: 6px;">
+                            <div class="form-group">
+                                <label for="id_time_start_v">Начало:</label>
+                            </div>
                         </div>
-                        <div class="col-xs-5 col-sm-3 col-md-3 col-lg-4 text-right" style="margin-top: 6px;">
+                        <div class="col-xs-6 col-sm-2 col-md-2 col-lg-2">
+                            <div class="form-group">
+                                <input class="form-control" id="id_time_start_v" title="" type="text">
+                            </div>
+                        </div>
+                        <div class="col-xs-5 col-sm-3 col-md-3 col-lg-3" style="margin-top: 6px;">
                             <div class="form-group">
                                 <label for="id_duration">Длительность:</label>
                             </div>
                         </div>
-                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3" id="youtube-form-slider" style="margin-top: 10px;"></div>
+                        <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" id="youtube-form-slider" style="margin-top: 10px;"></div>
                         <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
                             <div class="form-group">
                                 <input class="form-control" id="id_duration" name="duration" title="" type="text">
@@ -113,6 +122,28 @@ $(document).ready(function() {
         return false;
     });
 
+    $('#id_url').on('keyup change', function() {
+        var url = document.createElement('a');
+        url.href = $(this).val();
+        var time = getUrlParameter(url, 't');
+        if (time) {
+            $('#id_time_start_v').val(time.toHHMMSS());
+            $('#id_time_start').val(parseInt(time));
+        } else {
+            $('#id_time_start_v').val('');
+            $('#id_time_start').val(0);
+        }
+    });
+    $('#id_time_start_v').mask('00:00:00', {
+        'placeholder': '__:__:__',
+        'clearIfNotMatch': true
+    });
+    $('#id_time_start_v').on('change', function() {
+        var hms = $(this).val();
+        var a = hms.split(':');
+        $('#id_time_start').val((+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]));
+    });
+
     $("#youtube-form-slider").slider({
         range: "min",
         value: 15,
@@ -123,6 +154,19 @@ $(document).ready(function() {
         }
     });
     $("#id_duration").val($("#youtube-form-slider").slider("value"));
+
+    String.prototype.toHHMMSS = function () {
+        var sec_num = parseInt(this, 10); // don't forget the second param
+        var hours   = Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+        if (hours   < 10) {hours   = "0"+hours;}
+        if (minutes < 10) {minutes = "0"+minutes;}
+        if (seconds < 10) {seconds = "0"+seconds;}
+        var time    = hours+':'+minutes+':'+seconds;
+        return time;
+    };
 
     function checkerState(videoId) {
         console.log("check");
@@ -171,6 +215,17 @@ $(document).ready(function() {
     function csrfSafeMethod(method) {
         // these HTTP methods do not require CSRF protection
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    function getUrlParameter(url, sParam) {
+        var sPageURL = url.search.substring(1);
+        var sURLVariables = sPageURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++) {
+            var sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] == sParam) {
+                return sParameterName[1];
+            }
+        }
     }
 });
 </script>
