@@ -23,17 +23,23 @@ def index(request):
         if url:
             url_obj = ParseUrl(url, time)
 
-            # получаем объект - сайт
-            site = get_object_or_404(Site, url=url_obj.domain, trash=False)
-            # получаем объект - статус
-            state = get_object_or_404(State, name=State.VIDEO_LOADING, trash=False)
+            videos = Video.objects.filter(uri=url_obj.uri, start_time__gte=(url_obj.time - 5),
+                                          start_time__lte=(url_obj.time + 5)).order_by('-date_created')
+            if not len(list(videos.iterator())):
+                # получаем объект - сайт
+                site = get_object_or_404(Site, url=url_obj.domain, trash=False)
+                # получаем объект - статус
+                state = get_object_or_404(State, name=State.VIDEO_LOADING, trash=False)
 
-            # оставляем запись в БД о запрошеннном видео
-            video_obj = Video(uri=url_obj.uri, start_time=url_obj.time, site=site, state=state)
-            video_obj.save()
-            id = video_obj.id
+                # оставляем запись в БД о запрошеннном видео
+                video_obj = Video(uri=url_obj.uri, start_time=url_obj.time, site=site, state=state)
+                video_obj.save()
+                id = video_obj.id
 
-            download_video.apply_async((video_obj, url, url_obj.time, duration), queue='download_video')
+                download_video.apply_async((video_obj, url, url_obj.time, duration), queue='download_video')
+            else:
+                video_obj = videos.last()
+                id = video_obj.id
 
     if request.is_ajax():
         return HttpResponse(id)
