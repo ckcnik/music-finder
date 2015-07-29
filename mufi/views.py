@@ -23,8 +23,9 @@ def index(request):
         if url:
             url_obj = ParseUrl(url, time)
 
+            state = get_object_or_404(State, name=State.SOUND_SEARCH_SUCCESS, trash=False)
             videos = Video.objects.filter(uri=url_obj.uri, start_time__gte=(url_obj.time - 5),
-                                          start_time__lte=(url_obj.time + 5)).order_by('-date_created')
+                                          start_time__lte=(url_obj.time + 5), state=state).order_by('-date_created')
             if not len(list(videos.iterator())):
                 # получаем объект - сайт
                 site = get_object_or_404(Site, url=url_obj.domain, trash=False)
