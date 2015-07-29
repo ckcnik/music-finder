@@ -31,7 +31,7 @@
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4" style="position: relative;height: 100%;">
             <div class="well well-sm youtube-well">
                 <div class="text-center"><h1>Inaux.net</h1></div>
-                <form id='youtube-form' action="/" method="post">
+                <form id='youtube-form' action="{% url 'index' %}" method="post">
                     {% csrf_token %}
                     {% bootstrap_field form.time_start %}
                     <div class="row">
