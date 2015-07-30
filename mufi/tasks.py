@@ -38,18 +38,22 @@ def audio_identify(video_obj):
     metainfos = response['metainfos'] if 'metainfos' in response else []
     video_obj.remove_audio_file()
 
+    empty_result = False
     with transaction.atomic():
         for info in metainfos:
-            audio = Audio.objects.filter(acrid=info['acrid'], trash=False)
-            if not audio:
-                audio = Audio(title=info['title'], artist=info['artist'], album=info['album'], acrid=info['acrid'])
-                audio.save()
+            if 'title' in info.keys():
+                audio = Audio.objects.filter(acrid=info['acrid'], trash=False)
+                if not audio:
+                    audio = Audio(title=info['title'], artist=info['artist'], album=info['album'], acrid=info['acrid'])
+                    audio.save()
+                else:
+                    audio = audio[0]
+                result = Result(video=video_obj, audio=audio, response=response['status']['code'], play_offset=info['play_offset'])
+                result.save()
             else:
-                audio = audio[0]
-            result = Result(video=video_obj, audio=audio, response=response['status']['code'], play_offset=info['play_offset'])
-            result.save()
+                empty_result = True
 
-    if response['status']['code'] == 0:
+    if response['status']['code'] == 0 and not empty_result:
         video_obj.set_state(State.SOUND_SEARCH_SUCCESS)
     else:
         video_obj.set_state(State.SOUND_SEARCH_ERROR)
