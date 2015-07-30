@@ -7,6 +7,7 @@ from os import system, remove
 from os.path import abspath, dirname, isfile
 from pytube import YouTube  # парсер ютуб-роликов
 from youtube_dl import YoutubeDL
+from music_finder.settings import DOWN_LOADER
 
 
 class Site(models.Model):
@@ -110,7 +111,7 @@ class Video(models.Model):
         """
         self.set_state('sound_process')
 
-        video_file_path = self.get_path_to_video(True)
+        video_file_path = self.get_path_to_video(True) if DOWN_LOADER == 'ydl' else self.get_path_to_video()
         audio_file_path = self.get_path_to_audio()
 
         if not isfile(video_file_path):
@@ -160,7 +161,7 @@ class Video(models.Model):
         Удаление временного видео-файла
         :return: None
         """
-        remove(self.get_path_to_video(True))
+        remove(self.get_path_to_video(True) if DOWN_LOADER == 'ydl' else self.get_path_to_video())
 
     def remove_audio_file(self):
         """
