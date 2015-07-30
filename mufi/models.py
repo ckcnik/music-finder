@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from os import system, remove
 from os.path import abspath, dirname, isfile
 from pytube import YouTube  # парсер ютуб-роликов
+from youtube_dl import YoutubeDL
 
 
 class Site(models.Model):
@@ -76,6 +77,28 @@ class Video(models.Model):
         video.download(self.PATH_TO_VIDEO)
         return True
 
+    def download_dl(self, url):
+        """
+        Парсинг видео с ютуба через youtube-dl
+        :param url: урла с ютуба или еще откуда-то
+        :return: возвращает true, если видео успешно загружено, в противном случае - возникнет исключение
+        """
+
+        if not self.id:
+            raise NameError('Не задан id для видеофайла!')
+
+        options = {
+            'format': 'bestaudio/best',  # choice of quality
+            'extractaudio': True,  # only keep the audio
+            'audioformat': "mp3",  # convert to mp3
+            'outtmpl': self.PATH_TO_VIDEO + str(self.id),  # name the file the ID of the video
+            'noplaylist': True,  # only download single song, not playlist
+        }
+
+        with YoutubeDL(options) as ydl:
+            ydl.download([url])
+        return True
+
     def extract_audio(self, seconds=0, duration=DURATION_SOUND_FILE):
         """
         Извлечение указанного промежутка аудио-потока из видео-файла и
@@ -87,7 +110,7 @@ class Video(models.Model):
         """
         self.set_state('sound_process')
 
-        video_file_path = self.get_path_to_video()
+        video_file_path = self.get_path_to_video(True)
         audio_file_path = self.get_path_to_audio()
 
         if not isfile(video_file_path):
@@ -112,20 +135,24 @@ class Video(models.Model):
         self.state = state
         self.save()
 
-    def get_path_to_audio(self):
+    def get_path_to_audio(self, without_format=False):
         """
         Возвращает путь к аудио-файлу
         :return:
         """
-        path = self.PATH_TO_AUDIO + str(self.id) + self.AUDIO_FILE_FORMAT
+        path = self.PATH_TO_AUDIO + str(self.id)
+        if not without_format:
+            path += self.AUDIO_FILE_FORMAT
         return path
 
-    def get_path_to_video(self):
+    def get_path_to_video(self, without_format=False):
         """
         Возвращает путь к видео-файлу
         :return:
         """
-        path = self.PATH_TO_VIDEO + str(self.id) + self.VIDEO_FILE_FORMAT
+        path = self.PATH_TO_VIDEO + str(self.id)
+        if not without_format:
+            path += self.VIDEO_FILE_FORMAT
         return path
     
     def remove_video_file(self):
@@ -133,7 +160,7 @@ class Video(models.Model):
         Удаление временного видео-файла
         :return: None
         """
-        remove(self.get_path_to_video())
+        remove(self.get_path_to_video(True))
 
     def remove_audio_file(self):
         """

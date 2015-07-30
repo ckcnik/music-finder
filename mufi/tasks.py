@@ -10,7 +10,7 @@ logger = get_task_logger(__name__)
 @task(name='download video')
 def download_video(video_obj, url, time, duration):
     # если видео успешно скачано
-    result = video_obj.download(url)
+    result = video_obj.download_dl(url)
     if result:
         video_obj.set_state(State.VIDEO_LOADING_SUCCESS)
         extract_audio.apply_async((video_obj, time, duration), queue='extract_audio')
