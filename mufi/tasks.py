@@ -3,6 +3,7 @@ from celery.utils.log import get_task_logger
 from django.db import transaction
 from .models import State, Result, Audio
 from .helpers import get_audio_content
+from music_finder.settings import DOWN_LOADER
 
 logger = get_task_logger(__name__)
 
@@ -10,7 +11,7 @@ logger = get_task_logger(__name__)
 @task(name='download video')
 def download_video(video_obj, url, time, duration):
     # если видео успешно скачано
-    result = video_obj.download_dl(url)
+    result = video_obj.download_dl(url) if DOWN_LOADER == 'ydl' else video_obj.download(url)
     if result:
         video_obj.set_state(State.VIDEO_LOADING_SUCCESS)
         extract_audio.apply_async((video_obj, time, duration), queue='extract_audio')
