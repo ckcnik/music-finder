@@ -131,3 +131,7 @@ MY_SETTING = {
         'ACCESS_SECRET': '0uECti2xjleseBUxpBkBMeYnevWNTc6ErJUUMts1',
     }
 }
+
+
+# загрузчик (pt, ydl)
+DOWN_LOADER = 'ydl'
