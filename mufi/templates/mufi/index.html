@@ -198,17 +198,30 @@ $(document).ready(function() {
                 var resultOk = $("#parsing-result");
                 var resultError = $("#parsing-result-error");
                 if (response.status == 'ok') {
-                    var table = '';
+                    var youtubeUrl = 'https://www.youtube.com/results?search_query=';
+                    var resultHtml = '';
                     var songs = response.songs;
                     for (var key in songs) {
-                        table += '<table class="table table-bordered" style="background-color: white;margin-bottom: 0;"><tbody>';
-                            table += '<tr><th scope="row">Название</th><td>' + songs[key]['title'] + '</td></tr>';
-                            table += '<tr><th scope="row">Исполнитель</th><td>' + songs[key]['artist'] + '</td></tr>';
-                            table += '<tr><th scope="row">Альбом</th><td>' + songs[key]['album'] + '</td></tr>';
-                        table += '</tbody></table>';
+                        resultHtml += '<table class="table table-bordered" style="background-color: white;margin-bottom: 0;"><tbody>';
+                            resultHtml += '<tr><th scope="row">Название</th><td>' + songs[key]['title'] + '</td></tr>';
+                            resultHtml += '<tr><th scope="row">Исполнитель</th><td>' + songs[key]['artist'] + '</td></tr>';
+                            resultHtml += '<tr><th scope="row">Альбом</th><td>' + songs[key]['album'] + '</td></tr>';
+                        resultHtml += '</tbody></table>';
+
+                        var url = $('#id_url').val().split('?')[0];
+                        var ts = $('#id_time_start').val();
+                        var dur = $('#id_duration').val();
+                        var href = 'http://{{ request.META.HTTP_HOST }}/?url=' + url + '&time_start=' + ts + '&duration=' + dur;
+
+                        resultHtml += '<div class="search-on-youtube">Поделись ссылкой ';
+                        resultHtml += '<input class="form-control" value="' + href + '" type="text">';
+                        resultHtml += '</div>';
+                        resultHtml += '<div class="search-on-youtube"><a href="';
+                        resultHtml += youtubeUrl + encodeURIComponent(songs[key]['title'] + ' ' + songs[key]['artist']);
+                        resultHtml += '" target="_blank">Результаты поиска в YouTube</a></div>';
                     }
                     resultError.hide();
-                    resultOk.html(table);
+                    resultOk.html(resultHtml);
                     resultOk.show();
                 } else if (response.status == 'error') {
                     resultOk.hide();
