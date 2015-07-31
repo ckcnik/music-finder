@@ -17,13 +17,13 @@ def index(request):
         data_request = request.POST
     elif request.method == 'GET':
         data_request = request.GET
-        auto_submit = True
-
 
     form = UrlSendForm(data_request)
     video_source_id = 0  # адишник записи видео-файла в БД
 
     if data_request and form.is_valid():
+        if request.method == 'GET':
+            auto_submit = True
         url = form.cleaned_data['url']
         time = form.cleaned_data['time_start'] if form.cleaned_data['time_start'] else 0
         duration = form.cleaned_data['duration'] if form.cleaned_data['duration'] else 15
