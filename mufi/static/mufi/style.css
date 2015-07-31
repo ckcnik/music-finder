@@ -14,3 +14,8 @@
 	left:50%;
 	transform: translate(-50%,-50%);
 }
+
+.youtube-well {
+	background-image: url("images/beta.png");
+    background-repeat: no-repeat;
+}
