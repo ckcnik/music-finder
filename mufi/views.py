@@ -12,15 +12,18 @@ def index(request):
     Главная страница
     """
     data_request = False
+    auto_submit = False  # авто-сабмит формы на случай отправки реквеста через гет-параметры
     if request.method == 'POST':
         data_request = request.POST
     elif request.method == 'GET':
         data_request = request.GET
+        auto_submit = True
+
 
     form = UrlSendForm(data_request)
     video_source_id = 0  # адишник записи видео-файла в БД
 
-    if data_request:
+    if data_request and form.is_valid():
         url = form.cleaned_data['url']
         time = form.cleaned_data['time_start'] if form.cleaned_data['time_start'] else 0
         duration = form.cleaned_data['duration'] if form.cleaned_data['duration'] else 15
@@ -51,7 +54,7 @@ def index(request):
     if request.is_ajax():
         return HttpResponse(video_source_id)
     else:
-        return render(request, 'mufi/index.html', {'form': form})
+        return render(request, 'mufi/index.html', {'form': form, 'auto_submit': auto_submit})
 
 
 def checker_state(request):

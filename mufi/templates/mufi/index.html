@@ -88,8 +88,10 @@
 $(document).ready(function() {
     var csrftoken = $.cookie('csrftoken');
     var timerId = 0;
+
     // Submit post on submit
-    $('#submit-button').on('click', function(event){
+    var submitButton = $('#submit-button');
+    submitButton.on('click', function(event){
         $("#parsing-result").hide();
         $("#parsing-result-error").hide();
         $('.loader').show();
@@ -122,29 +124,37 @@ $(document).ready(function() {
         return false;
     });
 
+    // для запуска авто-сабмита при передаче гетов
+    var autoSubmit = {% if auto_submit %}true{% else %}false{% endif %};
+    if (autoSubmit) {
+        submitButton.trigger('click');
+    }
+
+    var idTimeStartV = $('#id_time_start_v');
     $('#id_url').on('keyup change', function() {
         var url = document.createElement('a');
         url.href = $(this).val();
         var time = getUrlParameter(url, 't');
         if (time) {
-            $('#id_time_start_v').val(time.toHHMMSS());
+            idTimeStartV.val(time.toHHMMSS());
             $('#id_time_start').val(parseInt(time));
         } else {
-            $('#id_time_start_v').val('');
+            idTimeStartV.val('');
             $('#id_time_start').val(0);
         }
     });
-    $('#id_time_start_v').mask('00:00:00', {
+    idTimeStartV.mask('00:00:00', {
         'placeholder': '__:__:__',
         'clearIfNotMatch': true
     });
-    $('#id_time_start_v').on('change', function() {
+    idTimeStartV.on('change', function() {
         var hms = $(this).val();
         var a = hms.split(':');
         $('#id_time_start').val((+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]));
     });
 
-    $("#youtube-form-slider").slider({
+    var formSlider = $("#youtube-form-slider");
+    formSlider.slider({
         range: "min",
         value: 15,
         min: 10,
@@ -153,7 +163,7 @@ $(document).ready(function() {
             $("#id_duration").val(ui.value);
         }
     });
-    $("#id_duration").val($("#youtube-form-slider").slider("value"));
+    $("#id_duration").val(formSlider.slider("value"));
 
     String.prototype.toHHMMSS = function () {
         var sec_num = parseInt(this, 10); // don't forget the second param
