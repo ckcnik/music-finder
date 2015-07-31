@@ -85,19 +85,21 @@ class Video(models.Model):
         :return: возвращает true, если видео успешно загружено, в противном случае - возникнет исключение
         """
 
-        if not self.id:
+        if not self.uri:
             raise NameError('Не задан id для видеофайла!')
 
+        pathToFile = self.PATH_TO_VIDEO + str(self.uri)
         options = {
             'format': 'bestaudio/best',  # choice of quality
             'extractaudio': True,  # only keep the audio
             'audioformat': "mp3",  # convert to mp3
-            'outtmpl': self.PATH_TO_VIDEO + str(self.id),  # name the file the ID of the video
+            'outtmpl': self.PATH_TO_VIDEO + str(self.uri),  # name the file the ID of the video
             'noplaylist': True,  # only download single song, not playlist
         }
 
-        with YoutubeDL(options) as ydl:
-            ydl.download([url])
+        if not isfile(pathToFile):
+            with YoutubeDL(options) as ydl:
+                ydl.download([url])
         return True
 
     def extract_audio(self, seconds=0, duration=DURATION_SOUND_FILE):
@@ -151,7 +153,7 @@ class Video(models.Model):
         Возвращает путь к видео-файлу
         :return:
         """
-        path = self.PATH_TO_VIDEO + str(self.id)
+        path = self.PATH_TO_VIDEO + str(self.uri)
         if not without_format:
             path += self.VIDEO_FILE_FORMAT
         return path

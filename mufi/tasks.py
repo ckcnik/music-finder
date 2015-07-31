@@ -26,7 +26,7 @@ def extract_audio(video_obj, time, duration):
     result = video_obj.extract_audio(time, duration)
     if result:
         video_obj.set_state(State.SOUND_PROCESS_SUCCESS)
-        video_obj.remove_video_file()
+        # video_obj.remove_video_file() # todo: повесить удаление файлов по крону
         audio_identify.apply_async((video_obj,), queue='audio_identify')
     else:
         video_obj.set_state(State.SOUND_PROCESS_ERROR)
