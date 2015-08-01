@@ -113,6 +113,12 @@ $(document).ready(function() {
                     // через 2 мин остановить повторы
                     setTimeout(function () {
                         clearInterval(timerId);
+                        var resultOk = $("#parsing-result");
+                        var resultError = $("#parsing-result-error");
+                        resultOk.hide();
+                        resultError.html('Не удалось найти ни одного совпадения. Попробуйте позже.');
+                        resultError.show();
+                        $('.loader').hide();
                         console.log("stop checker");
                     }, 240000);
                 }
@@ -225,7 +231,7 @@ $(document).ready(function() {
                     resultOk.show();
                 } else if (response.status == 'error') {
                     resultOk.hide();
-                    resultError.html('<strong>Ошибка!</strong> Попробуйте позже.');
+                    resultError.html('Не удалось найти ни одного совпадения. Попробуйте позже.');
                     resultError.show();
                 }
             },
