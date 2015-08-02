@@ -41,7 +41,7 @@ INSTALLED_APPS = (
     'mufi',  # подключил ядро парсера
     'djcelery',
     'bootstrap3',
-    'webmaster_verification',  # для подтверждения прав на сайт в вебмастре-сервисах
+    'webmaster_verification.lib.webmaster_verification',  # для подтверждения прав на сайт в вебмастре-сервисах
 )
 
 MIDDLEWARE_CLASSES = (
