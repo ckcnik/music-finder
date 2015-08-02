@@ -19,5 +19,4 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^', include('mufi.urls')),  # подключил урлы mufi приложения
     url(r'^admin/', include(admin.site.urls)),
-    url(r'', include('webmaster_verification.urls')),
 ]
