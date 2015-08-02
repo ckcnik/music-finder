@@ -21,5 +21,4 @@ urlpatterns = [
     url(r'^', include('mufi.urls')),  # подключил урлы mufi приложения
     url(r'^admin/', include(admin.site.urls)),
     url(r'^googlef0ddb39141bb36c2\.html$', lambda r: HttpResponse("google-site-verification: googlef0ddb39141bb36c2.html")),
-    url(r'^yandex_5c9fac42e7f6e558\.html$', lambda r: HttpResponse("Verification: 5c9fac42e7f6e558")),
 ]

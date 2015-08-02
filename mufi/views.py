@@ -72,3 +72,12 @@ def checker_state(request):
             result = {'status': 'pending'}
 
     return HttpResponse(dumps(result))
+
+
+def yandex_verifi(request):
+    """
+    Верификация яндекс-вебмастера
+    :param request:
+    :return:
+    """
+    return render(request, 'mufi/yandex.html')
