@@ -36,20 +36,21 @@ def extract_audio(video_obj, time, duration):
 @task(name='audio identify')
 def audio_identify(video_obj):
     response = get_audio_content(video_obj)
-    metainfos = response['metainfos'] if 'metainfos' in response else []
+    metadata = response['metadata'] if 'metadata' in response else []
     # video_obj.remove_audio_file()
 
     empty_result = False
     with transaction.atomic():
-        for info in metainfos:
+        music = metadata['music'] if 'music' in metadata else []
+        for info in music:
             if 'title' in info.keys():
                 audio = Audio.objects.filter(acrid=info['acrid'], trash=False)
                 if not audio:
-                    audio = Audio(title=info['title'], artist=info['artist'], album=info['album'], acrid=info['acrid'])
+                    audio = Audio(title=info['title'], artist=info['artists'][0]['name'], album=info['album']['name'], acrid=info['acrid'])
                     audio.save()
                 else:
                     audio = audio[0]
-                result = Result(video=video_obj, audio=audio, response=response['status']['code'], play_offset=info['play_offset'])
+                result = Result(video=video_obj, audio=audio, response=response['status']['code'], play_offset=info['play_offset_ms'])
                 result.save()
             else:
                 empty_result = True
