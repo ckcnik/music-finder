@@ -23,3 +23,15 @@
 .search-on-youtube {
 	margin: 15px 0 0 0;
 }
+
+body {
+	background: url("images/background.jpg");
+}
+
+.overlay {
+	background: black;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+}
