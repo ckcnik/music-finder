@@ -40,8 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'mufi',  # подключил ядро парсера
     'djcelery',
-    'bootstrap3',
-    'webmaster_verification.lib.webmaster_verification',  # для подтверждения прав на сайт в вебмастре-сервисах
+    'bootstrap3'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -136,8 +135,3 @@ MY_SETTING = {
 
 # загрузчик (pt, ydl)
 DOWN_LOADER = 'ydl'
-
-WEBMASTER_VERIFICATION = {
-    'yandex': '5c9fac42e7f6e558',
-    'google': 'f0ddb39141bb36c2',
-}

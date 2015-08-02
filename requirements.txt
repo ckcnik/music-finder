@@ -8,4 +8,3 @@ django-bootstrap3>=6.1.0
 #pytube>=0.2.0
 gunicorn>=19.3.0
 youtube-dl>=2015.07.18
-django-webmaster-verification>=0.2.4
