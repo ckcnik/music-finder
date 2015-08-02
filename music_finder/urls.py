@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.http import HttpResponse
 
 urlpatterns = [
     url(r'^', include('mufi.urls')),  # подключил урлы mufi приложения
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^googlef0ddb39141bb36c2\.html$', lambda r: HttpResponse("google-site-verification: googlef0ddb39141bb36c2.html")),
 ]
