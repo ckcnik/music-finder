@@ -127,8 +127,8 @@ CELERY_TIMEZONE = 'Europe/Moscow'
 # кастомные сеттинги проекта
 MY_SETTING = {
     'ACRCLOUD': {
-        'ACCESS_KEY': '78004df94475843124e78634d2d7de60',
-        'ACCESS_SECRET': '0uECti2xjleseBUxpBkBMeYnevWNTc6ErJUUMts1',
+        'ACCESS_KEY': '8094176002aeb9664d521608acf5a3de',
+        'ACCESS_SECRET': 'QX4SY3OPVRmlWlbPrVQG7KNxie9r7iIp3tjZqeqF',
     }
 }
 
