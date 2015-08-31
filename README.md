@@ -42,6 +42,31 @@ $ redis-cli ping
 ```
 Ответ: `PONG`
 
+### Virtual env ###
+```
+source env/bin/activate
+```
+
+### Запуск очередей ###
+В папке с проектом выполнить комадну:
+```
+celery -A music_finder worker -l info -Q download_video,extract_audio,audio_identify
+```
+
+### Заупск сервера ###
+```
+gunicorn --bind=127.0.0.1:8888 --workers=3 --env DJANGO_SETTINGS_MODULE=music_finder.settings music_finder.wsgi
+```
+Ctrl + Z - приостановка процесса
+fg - возобновить процесс
+bg - запуск в фоне
+
+
+### Поиск процесса ###
+```
+ps ax|grep gunicorn
+```
+
 ### Contribution guidelines ###
 
 * Writing tests
