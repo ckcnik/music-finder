@@ -7,12 +7,17 @@
 	display: none;
 }
 
+.container-fluid {
+	overflow: auto;
+}
+
 .youtube-well {
-	width: 100%;
-	position: absolute;
-	top: 50%;
-	left:50%;
-	transform: translate(-50%,-50%);
+	/*width: 100%;*/
+	/*position: absolute;*/
+	/*top: 50%;*/
+	/*left:50%;*/
+	/*transform: translate(-50%,-50%);*/
+	box-shadow: 0px 0px 0px 2000px rgba(255, 255, 255, 0.4) !important;
 }
 
 .youtube-well {
@@ -26,6 +31,7 @@
 
 body {
 	background: url("images/background.jpg");
+	overflow: hidden;
 }
 
 .overlay {
