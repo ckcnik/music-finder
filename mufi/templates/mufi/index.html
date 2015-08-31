@@ -129,6 +129,7 @@
 $(document).ready(function() {
     var csrftoken = $.cookie('csrftoken');
     var timerId = 0;
+    var timeOutId = 0;
 
     // Submit post on submit
     var submitButton = $('#submit-button');
@@ -152,7 +153,7 @@ $(document).ready(function() {
                     }, 2000);
 
                     // через 2 мин остановить повторы
-                    setTimeout(function () {
+                    timeOutId = setTimeout(function () {
                         clearInterval(timerId);
                         var resultOk = $("#parsing-result");
                         var resultError = $("#parsing-result-error");
@@ -240,6 +241,7 @@ $(document).ready(function() {
                 var response = $.parseJSON( data );
                 if (response.status != 'pending') {
                     clearInterval(timerId);
+                    clearTimeout(timeOutId);
                     $('.loader').hide();
                 }
                 var resultOk = $("#parsing-result");
